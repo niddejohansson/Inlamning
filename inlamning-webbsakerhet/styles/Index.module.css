@@ -1,0 +1,32 @@
+.pageContainer {
+    height: 100vh;
+    display: flex;
+}
+
+.loginContainer {
+    background-color: green;
+    height: 200px;
+    margin: auto;
+    border-radius: 10px;
+    width: 30%;
+    display: flex;
+}
+
+.loginForm {
+    margin: auto;
+    flex-direction: column;
+    display: flex;
+}
+
+.loginField {
+    margin: 10px;
+    padding: 10px;
+    width: 90%;
+}
+
+.loginButton{
+    color: black;
+    width: 50%;
+    margin: auto;
+    padding: 10px;
+}
