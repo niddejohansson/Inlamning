@@ -1,0 +1,43 @@
+.pageContainer {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    align-items: center;
+}
+
+.bossContainer {
+    background-color: green;
+    height: 200px;
+    border-radius: 10px;
+    width: 30%;
+    display: flex;
+    margin-top: 100px;
+}
+
+.bossForm {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.bossField {
+    margin: auto;
+    padding: 10px;
+    width: 90%;
+}
+
+.bossButton{
+    color: black;
+    width: 50%;
+    margin: auto;
+    padding: 10px;
+}
+
+.listWorkers{
+    background-color: green;
+    height: 200px;
+    width: 30%;
+    margin-top: 25px;
+    text-align: center;
+}

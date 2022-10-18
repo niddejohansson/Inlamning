@@ -1,3 +1,6 @@
+import styles from '../styles/Worker.module.css'
+
+
 const Worker = () => {
   return (
     <div>
