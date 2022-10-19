@@ -6,7 +6,7 @@
 }
 
 .bossContainer {
-    background-color: green;
+    background-color: rgb(209, 207, 207);
     height: 200px;
     border-radius: 10px;
     width: 30%;
@@ -35,7 +35,7 @@
 }
 
 .listWorkers{
-    background-color: green;
+    background-color: rgb(209, 207, 207);
     height: 200px;
     width: 30%;
     margin-top: 25px;
