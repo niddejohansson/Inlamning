@@ -1,11 +1,13 @@
 const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 const port = process.env.PORT || 4000;
 
@@ -25,49 +27,68 @@ const pool = mysql.createPool({
   insecureAuth: true,
 });
 
-const db = {}
 
-db.createUser = (username, email, password) => {
-    return new Promise((resolve, reject) => {
-        `INSERT INTO Users (username, email, password) VALUES (?)`;
-    })
-}
+// db.createUser = (username, email, password) => {
+//     return new Promise((resolve, reject) => {
+//         `INSERT INTO Users (username, email, password) VALUES (?)`;
+//     })
+// }
 
-app.get('/', async (req, res) =>{
-    db.getConnection(async (err, connection) => {
-        if (err) throw err;
-        connection.query('SELECT username, userId FROM Users', (err, result, fields) => {
-            if (err){
-                throw err;
-            } else {
-                connection.release();
-                res.send(result)
-            }
-        });
-    });
-});
+// app.get('/', async (req, res) =>{
+//     db.getConnection(async (err, connection) => {
+//         if (err) throw err;
+//         connection.query('SELECT username, userId FROM Users', (err, result, fields) => {
+//             if (err){
+//                 throw err;
+//             } else {
+//                 connection.release();
+//                 res.send(result)
+//             }
+//         });
+//     });
+// });
 
 app.post('/api/register', async (req, res) => {
     const username = req.body.username;
-    const email = req.body.email;
     let password = req.body.password;
-    console.log(username, email, password);
+    console.log(username, password);
 
     // 1. Check for empty data
 
 
-    if(username && email && password) {
-        createUser(username, email, password)
+    if(!username || !password) {
+        console.log("fyll i fälten")
+        return res.sendStatus(400);
     }
-
-    return res.sendStatus(200);
-
 
     // 2. Check if user already exists in DB
 
-
+    //const user = await db.getUserByEmail(email);
+    // if (user) {
+    //     return res.status(409).json({ message: 'User already exists'})
+    // }
 
     // 3. Hash password & Register USER
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    //const userId = await db.createUser(username, email, hashedPassword);
+    console.log(hashedPassword)
+
+    
+    try{
+        const sql = "INSERT INTO Users (username, password) VALUES (?, ?)";
+        const query = mysql.format(sql, [username, hashedPassword]);
+        pool.query(query, (err, result) => {
+        if(err){
+            return res.sendStatus(400);
+        }
+        console.log("detta är result", result)
+        return res.sendStatus(200);
+    }); 
+    }catch(err){
+        console.log("error?", err)
+        return res.sendStatus(400);
+    } 
 
     // 4. Assign ROLE to USER
 
