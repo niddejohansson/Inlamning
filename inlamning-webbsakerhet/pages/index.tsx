@@ -1,45 +1,43 @@
-import styles from '../styles/Index.module.css'
-import { useState } from 'react';
+import styles from "../styles/Index.module.css";
+import React, { useState } from "react";
 import Axios from "axios";
 
 const Home = () => {
-  const [userLoginName, setUserLoginName] = useState("")
-  const [userLoginPassword, setUserLoginPassword] = useState("")
-  // const [userRegisterName, setUserRegisterName] = useState("")
-  // const [userRegisterPassword, setUserRegisterPassword] = useState("")
+  const login = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("kommer jag in här?");
 
-  const login = () => {
-    Axios.post("http://localhost:4000/api/register", 
-    { 
-      username: userLoginName,
-      password: userLoginPassword 
-    })
-  }
+    const { username, password } = document.forms[0];
 
-
+    const loginUser = await Axios.post("http://localhost:4000/api/login", {
+      email: username.value,
+      password: password.value,
+    });
+    console.log(loginUser);
+  };
   return (
     <div className={styles.pageContainer}>
       <section className={styles.loginContainer}>
-        <form className={styles.loginForm}>
-          <input 
-          type="text" 
-          className={styles.loginField} 
-          placeholder="Användarnamn" 
-          onChange={(e) => 
-          { setUserLoginName(e.target.value);
-          }}></input>
-          <input 
-          type="text" 
-          className={styles.loginField} 
-          placeholder="Lösenord" 
-          onChange={(e) => 
-            { setUserLoginPassword(e.target.value); 
-            }}></input>
-          <button className={styles.loginButton} onClick={login}>Logga in</button>
+        <form className={styles.loginForm} onSubmit={login}>
+          <input
+            type="text"
+            className={styles.loginField}
+            placeholder="Email"
+            name="username"
+          ></input>
+          <input
+            type="text"
+            className={styles.loginField}
+            placeholder="Lösenord"
+            name="password"
+          ></input>
+          <button className={styles.loginButton} type="submit">
+            Logga in
+          </button>
         </form>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

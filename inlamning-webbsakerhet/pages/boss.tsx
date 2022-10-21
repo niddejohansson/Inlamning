@@ -1,22 +1,55 @@
-import styles from '../styles/Boss.module.css'
-
+import styles from "../styles/Boss.module.css";
+import React, { useState } from "react";
+import Axios from "axios";
 
 const Boss = () => {
-  return (
-    <div className={styles.pageContainer}>  
-      <section className={styles.bossContainer}>
-        <article className={styles.bossForm}>
-          <input className={styles.bossField} type="text" placeholder="Ny användare"></input>
-          <input className={styles.bossField} type="password" placeholder="Ny användares lösenord"></input>
-          <button className={styles.bossButton}>Skapa användare</button>
-        </article>  
-    </section>
-      <div className={styles.listWorkers}>
-        List of your coworkers:
-      </div>
-    </div>
-    
-  )
-}
+  const registerWorker = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-export default Boss
+    const { username, email, password } = document.forms[0];
+
+    const regInformation = await Axios.post(
+      "http://localhost:4000/api/register",
+      {
+        username: username.value,
+        email: email.value,
+        password: password.value,
+      }
+    );
+    console.log(regInformation);
+  };
+
+  return (
+    <div className={styles.pageContainer}>
+      <section className={styles.bossContainer}>
+        <form className={styles.bossForm} onSubmit={registerWorker}>
+          
+          <input
+            className={styles.bossField}
+            type="text"
+            placeholder="Ny användare"
+            name="username"
+          ></input>
+          <input
+            className={styles.bossField}
+            type="password"
+            placeholder="Ny användares lösenord"
+            name="password"
+          ></input>
+          <input
+            className={styles.bossField}
+            type="email"
+            placeholder="Ny användares email"
+            name="email"
+          ></input>
+          <button className={styles.bossButton} type="submit">
+            Skapa användare
+          </button>
+        </form>
+      </section>
+      <div className={styles.listWorkers}>List of your coworkers:</div>
+    </div>
+  );
+};
+
+export default Boss;

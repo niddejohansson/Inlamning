@@ -1,6 +1,6 @@
-const mysql = require('mysql');
+const mysql = require("mysql");
 
-require('dotenv').config();
+require("dotenv").config();
 
 const DB_HOST = process.env.DB_HOST;
 const DB_USER = process.env.DB_USER;
@@ -19,11 +19,12 @@ const db = mysql.createConnection({
 // CREATE TABLES
 
 db.connect(async (err, connection) => {
-  console.log('RUNNING CREATE TABLE SCRIPT');
+  console.log("RUNNING CREATE TABLE SCRIPT");
   let createUsersTable = `CREATE TABLE Users (
     userId int NOT NULL AUTO_INCREMENT, 
     username varchar(45) NOT NULL, 
-    password varchar(100) NOT NULL, 
+    password varchar(100) NOT NULL,
+    email varchar(100) NOT NULL, 
     PRIMARY KEY (userId)) 
     ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
     `;
@@ -46,17 +47,17 @@ db.connect(async (err, connection) => {
     if (err) {
       process.exit(1);
     }
-    console.log('TABLE CREATED!');
+    console.log("TABLE CREATED!");
     db.query(createRolesTable, async (err) => {
       if (err) {
         process.exit(1);
       }
-      console.log('TABLE CREATED!');
+      console.log("TABLE CREATED!");
       db.query(createUsersWithRoleTable, async (err) => {
         if (err) {
           process.exit(1);
         }
-        console.log('TABLE CREATED!');
+        console.log("TABLE CREATED!");
         process.exit(0);
       });
     });
