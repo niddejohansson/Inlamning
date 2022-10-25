@@ -3,38 +3,64 @@ import React, { useState } from "react";
 import Axios from "axios";
 
 const Home = () => {
-  const login = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  async function login() {
     console.log("kommer jag in här?");
 
-    const { username, password } = document.forms[0];
+    console.log(email);
 
-    const loginUser = await Axios.post("http://localhost:4000/api/login", {
+    /*     await Axios.post("http://localhost:4000/api/login", {
       email: username.value,
       password: password.value,
+    })
+      .then(function (response) {
+        console.log(response);
+        
+      })
+      .catch(function (err) {
+        console.log(err);
+      }); */
+
+    const response = await fetch("http://localhost:4000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
     });
-    console.log(loginUser);
-  };
+
+    const data = await response.json();
+    console.log(data);
+  }
   return (
     <div className={styles.pageContainer}>
       <section className={styles.loginContainer}>
-        <form className={styles.loginForm} onSubmit={login}>
+        <section className={styles.loginForm}>
           <input
             type="text"
             className={styles.loginField}
             placeholder="Email"
-            name="username"
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           ></input>
           <input
             type="text"
             className={styles.loginField}
             placeholder="Lösenord"
-            name="password"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           ></input>
-          <button className={styles.loginButton} type="submit">
+          <button className={styles.loginButton} onClick={login}>
             Logga in
           </button>
-        </form>
+        </section>
       </section>
     </div>
   );

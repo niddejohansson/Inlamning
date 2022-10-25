@@ -8,7 +8,7 @@ const Admin = () => {
 
     const { username, email, password } = document.forms[0];
 
-    const regInformation = await Axios.post(
+    /* const regInformation = await Axios.post(
       "http://localhost:4000/api/register",
       {
         username: username.value,
@@ -16,8 +16,22 @@ const Admin = () => {
         password: password.value,
         role: "boss",
       }
-    );
-    console.log(regInformation);
+    ); */
+
+    const response = await fetch("http://localhost:4000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username.value,
+        email: email.value,
+        password: password.value,
+        role: "boss",
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
   };
   return (
     <div className={styles.pageContainer}>
