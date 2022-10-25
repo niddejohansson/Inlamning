@@ -14,6 +14,7 @@ const Boss = () => {
         username: username.value,
         email: email.value,
         password: password.value,
+        role: "worker",
       }
     );
     console.log(regInformation);
@@ -23,7 +24,6 @@ const Boss = () => {
     <div className={styles.pageContainer}>
       <section className={styles.bossContainer}>
         <form className={styles.bossForm} onSubmit={registerWorker}>
-          
           <input
             className={styles.bossField}
             type="text"

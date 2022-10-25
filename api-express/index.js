@@ -78,6 +78,7 @@ app.post("/api/login", async (req, res) => {
 app.post("/api/register", async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
+  const role = req.body.role;
   let password = req.body.password;
   console.log(username, password);
 
@@ -112,8 +113,14 @@ app.post("/api/register", async (req, res) => {
     console.log(hashedPassword);
 
     const sql =
-      "INSERT INTO Users (userId, username, password, email) VALUES (?, ?, ?, ?)";
-    const query = mysql.format(sql, [null, username, hashedPassword, email]);
+      "INSERT INTO Users (userId, username, password, email, role) VALUES (?, ?, ?, ?, ?)";
+    const query = mysql.format(sql, [
+      null,
+      username,
+      hashedPassword,
+      email,
+      role,
+    ]);
     pool.query(query, (err, result) => {
       if (err) {
         return res.sendStatus(400);

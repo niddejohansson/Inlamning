@@ -1,4 +1,4 @@
-import styles from "../styles/Boss.module.css";
+import styles from "../styles/Admin.module.css";
 import React, { useState } from "react";
 import Axios from "axios";
 
@@ -14,6 +14,7 @@ const Admin = () => {
         username: username.value,
         email: email.value,
         password: password.value,
+        role: "boss",
       }
     );
     console.log(regInformation);
