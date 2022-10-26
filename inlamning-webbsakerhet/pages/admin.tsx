@@ -1,8 +1,14 @@
 import styles from "../styles/Admin.module.css";
-import React, { useState } from "react";
-import Axios from "axios";
+import React, { useState, useEffect } from "react";
+import { NextResponse } from 'next/server';
+import { useRouter } from "next/router";
+
+
 
 const Admin = () => {
+  const router = useRouter();
+
+
   const registerBoss = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 

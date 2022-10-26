@@ -1,15 +1,14 @@
 import styles from "../styles/Index.module.css";
 import React, { useState } from "react";
-import Axios from "axios";
+import { useRouter } from "next/router";
 
 const Home = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   async function login() {
     console.log("kommer jag in här?");
-
-    console.log(email);
 
     /*     await Axios.post("http://localhost:4000/api/login", {
       email: username.value,
@@ -25,6 +24,7 @@ const Home = () => {
 
     const response = await fetch("http://localhost:4000/api/login", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -35,7 +35,19 @@ const Home = () => {
     });
 
     const data = await response.json();
-    console.log(data);
+    console.log(data.role);
+    if (data.role === "worker") {
+      localStorage.setItem("role", data.role);
+      router.push("http://localhost:3000/worker");
+    }
+    if (data.role === "boss") {
+      localStorage.setItem("role", data.role);
+      router.push("http://localhost:3000/boss");
+    }
+    if (data.role === "admin") {
+      localStorage.setItem("role", data.role);
+      router.push("http://localhost:3000/admin");
+    }
   }
   return (
     <div className={styles.pageContainer}>

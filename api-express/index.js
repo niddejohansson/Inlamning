@@ -10,8 +10,7 @@ const db = require("./database");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
 app.use(cookieparser());
 app.use(express.urlencoded({ extended: true }));
 
