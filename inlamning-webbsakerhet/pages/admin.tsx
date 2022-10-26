@@ -35,6 +35,7 @@ const Admin = () => {
   };
   return (
     <div className={styles.pageContainer}>
+      <h1>DU ÄR ADMIN</h1>
       <section className={styles.adminContainer}>
         <form className={styles.adminForm} onSubmit={registerBoss}>
           <input

@@ -50,7 +50,7 @@ const Home = () => {
             }}
           ></input>
           <input
-            type="text"
+            type="password"
             className={styles.loginField}
             placeholder="Lösenord"
             onChange={(e) => {

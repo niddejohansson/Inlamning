@@ -22,6 +22,7 @@ const Boss = () => {
 
   return (
     <div className={styles.pageContainer}>
+      <h1>DU ÄR BOSS</h1>
       <section className={styles.bossContainer}>
         <form className={styles.bossForm} onSubmit={registerWorker}>
           <input
