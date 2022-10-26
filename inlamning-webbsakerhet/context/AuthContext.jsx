@@ -24,7 +24,7 @@ export const AllContextProvider = ({ children }) => {
         });
       });
     };
-    getUsers();
+    getRoles();
     console.log(sql);
   }, [sql]);
 
