@@ -1,45 +1,27 @@
 import { createContext, useEffect, useState } from "react";
-require("dotenv").config();
-import { db, pool } from "../../api-express/database";
 
 export const AuthContext = createContext();
 
-export const AllContextProvider = ({ children }) => {
-  const [isWorker, setIsWorker] = useState(false);
-  const [isBoss, setIsBoss] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  console.log();
+export const AuthContextProvider = ({ children }) => {
+  const [user, setUser] = useState({});
 
   useEffect(() => {
-    db.getRoles = () => {
-      return new Promise((resolve, reject) => {
-        const sql = "SELECT * FROM Users WHERE role = ?";
-        pool.query(sql, (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result);
-          }
-        });
-      });
+    const fetchAllUsers = async () => {
+      const response = await fetch("http://localhost:4000/api/getallusers");
+      //response.data.json();
+      console.log(await response.json());
     };
-    getRoles();
-    console.log(sql);
-  }, [sql]);
+    fetchAllUsers();
+  }, []);
 
   return (
-    <AllContext.Provider
+    <AuthContext.Provider
       value={{
-        isWorker,
-        setIsWorker,
-        isBoss,
-        setIsBoss,
-        isAdmin,
-        setIsAdmin,
+        user,
+        setUser,
       }}
     >
       {children}
-    </AllContext.Provider>
+    </AuthContext.Provider>
   );
 };

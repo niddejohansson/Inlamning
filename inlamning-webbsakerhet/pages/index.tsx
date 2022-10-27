@@ -38,15 +38,15 @@ const Home = () => {
     console.log(data.role);
     if (data.role === "worker") {
       localStorage.setItem("role", data.role);
-      router.push("http://localhost:3000/worker");
+      router.push("/worker");
     }
     if (data.role === "boss") {
       localStorage.setItem("role", data.role);
-      router.push("http://localhost:3000/boss");
+      router.push("/boss");
     }
     if (data.role === "admin") {
       localStorage.setItem("role", data.role);
-      router.push("http://localhost:3000/admin");
+      router.push("/admin");
     }
   }
   return (

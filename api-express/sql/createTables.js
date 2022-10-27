@@ -25,8 +25,6 @@ db.connect(async (err, connection) => {
     username varchar(45) NOT NULL, 
     password varchar(100) NOT NULL,
     email varchar(100) NOT NULL, 
-    role varchar(100) NOT NULL,
-    bossId varchar(100) NOT NULL, 
     PRIMARY KEY (userId)) 
     ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
     `;

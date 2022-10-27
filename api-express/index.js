@@ -41,6 +41,9 @@ app.post("/api/login", async (req, res) => {
     return;
   }
 
+  //hämta userId från email
+  //hämta roleId från userId
+
   const accessToken = jwt.sign(
     {
       username: user.username,
@@ -63,7 +66,7 @@ app.post("/api/login", async (req, res) => {
 app.post("/api/register", async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
-  const role = req.body.role;
+  const rolename = req.body.role;
   let password = req.body.password;
   console.log(username, password);
 
@@ -81,13 +84,20 @@ app.post("/api/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const createUser = await db.createUser({
+    const userId = await db.createUser({
       username: username,
       hashedPassword: hashedPassword,
       email: email,
-      role: role,
+      role: "nyroll",
     });
-    res.json(createUser);
+    //get role id by rolename
+    const role = await db.getRoleIdByRolename(rolename);
+    //assign role to user
+    await db.assignRoleToUser(role.roleId, userId);
+
+    //signa token returnera cookie
+
+    res.json(userId);
   } catch (err) {
     console.log(err);
     return res.sendStatus(400);

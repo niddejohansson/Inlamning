@@ -47,16 +47,60 @@ db.createUser = (user) => {
     ]);
     pool.query(query, (err, result) => {
       if (err) {
+        console.log("här crashar det", err);
         reject(err);
       }
-      resolve(result.insetId);
+      console.log(result);
+      resolve(result.insertId);
+    });
+  });
+};
+
+db.getRoleIdByRolename = (rolename) => {
+  return new Promise((resolve, reject) => {
+    const sql = "select roleId from Roles where Roles.rolename = ?";
+    const query = mysql.format(sql, [rolename]);
+    pool.query(query, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result[0]);
+      }
+    });
+  });
+};
+
+db.assignRoleToUser = (roleId, userId) => {
+  console.log(roleId);
+  return new Promise((resolve, reject) => {
+    const sql = "INSERT into UsersWithRoles (userId, roleId) VALUES (?, ?)";
+    const query = mysql.format(sql, [userId, roleId]);
+    pool.query(query, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
     });
   });
 };
 
 db.getUsers = () => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM Users;";
+    const sql = "SELECT * FROM Users";
+    pool.query(sql, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
+
+db.getUser = () => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT * FROM Users WHERE role = 'boss';";
     pool.query(sql, (err, result) => {
       if (err) {
         reject(err);
