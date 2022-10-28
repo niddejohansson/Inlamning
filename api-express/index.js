@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const cookieparser = require("cookie-parser");
 require("dotenv").config();
 
+const jwtvalidator = require("./middleware/jwtvalidator");
 const db = require("./database");
 const app = express();
 
@@ -40,7 +41,8 @@ app.post("/api/login", async (req, res) => {
     res.status(400).json({ message: "fel lösenord" });
     return;
   }
-
+  const roleFromUserId = await db.getRolesForUser(user.userId);
+  console.log("rolefromuser:", roleFromUserId, user.userId);
   //hämta userId från email
   //hämta roleId från userId
 
@@ -55,12 +57,15 @@ app.post("/api/login", async (req, res) => {
       expiresIn: "15min",
     }
   );
-  res.status(200).cookie("token", accessToken, { httpOnly: true }).json({
-    username: user.username,
-    email: user.email,
-    role: user.role,
-    accessToken: accessToken,
-  });
+  res
+    .status(200)
+    .cookie("token", accessToken, { httpOnly: true, sameSite: "strict" })
+    .json({
+      username: user.username,
+      email: user.email,
+      role: userId.role,
+      accessToken: accessToken,
+    });
 });
 
 app.post("/api/register", async (req, res) => {
@@ -88,20 +93,46 @@ app.post("/api/register", async (req, res) => {
       username: username,
       hashedPassword: hashedPassword,
       email: email,
-      role: "nyroll",
+      role: rolename,
     });
     //get role id by rolename
-    const role = await db.getRoleIdByRolename(rolename);
+    const role = await db.getRoleByRolename(rolename);
     //assign role to user
-    await db.assignRoleToUser(role.roleId, userId);
+    await db.assignRoleToUser(role.role, userId);
 
     //signa token returnera cookie
 
-    res.json(userId);
+    const accessToken = jwt.sign(
+      {
+        username: username,
+        email: email,
+        role: role.rolename,
+        accessToken: accessToken,
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: "15min",
+      }
+    );
+
+    res
+      .status(200)
+      .cookie("token", accessToken, { httpOnly: true, sameSite: "strict" })
+      .json({
+        username: username,
+        email: email,
+        role: role.rolename,
+        accessToken: accessToken,
+      });
   } catch (err) {
     console.log(err);
     return res.sendStatus(400);
   }
+});
+
+app.get("/api/me", jwtvalidator, async (req, res) => {
+  // const me = await db.getUsersByEmail();
+  res.json({ message: "hejhej" });
 });
 
 app.get("/api/getallusers", async (req, res) => {

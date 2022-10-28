@@ -56,9 +56,26 @@ db.createUser = (user) => {
   });
 };
 
-db.getRoleIdByRolename = (rolename) => {
+db.getRolesForUser = (userId) => {
+  console.log("getRolesForUser userid", userId);
   return new Promise((resolve, reject) => {
-    const sql = "select roleId from Roles where Roles.rolename = ?";
+    const sql =
+      "SELECT Roles.roleId, Roles.rolename FROM UsersWithRoles INNER JOIN Roles ON Roles.roleId = UsersWithRoles.roleId WHERE UsersWithRoles.userId = ?";
+    const query = mysql.format(sql, [userId]);
+
+    pool.query(query, (err, result) => {
+      if (err) {
+        return reject(err);
+      }
+      console.log("logg i databas getrolesforuser", result);
+      return resolve(result);
+    });
+  });
+};
+
+db.getRoleByRolename = (rolename) => {
+  return new Promise((resolve, reject) => {
+    const sql = "select * from Roles where Roles.rolename = ?";
     const query = mysql.format(sql, [rolename]);
     pool.query(query, (err, result) => {
       if (err) {

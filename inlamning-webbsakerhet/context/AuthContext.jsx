@@ -9,7 +9,7 @@ export const AuthContextProvider = ({ children }) => {
     const fetchAllUsers = async () => {
       const response = await fetch("http://localhost:4000/api/getallusers");
       //response.data.json();
-      console.log(await response.json());
+      console.log("alla användare i databasen: ", await response.json());
     };
     fetchAllUsers();
   }, []);
