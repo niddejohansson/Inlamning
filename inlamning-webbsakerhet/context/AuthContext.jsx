@@ -5,14 +5,17 @@ export const AuthContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
-  useEffect(() => {
+  /* useEffect(() => {
     const fetchAllUsers = async () => {
       const response = await fetch("http://localhost:4000/api/getallusers");
-      //response.data.json();
-      console.log("alla användare i databasen: ", await response.json());
+      const visitingUser = response.data.json();
+
+      //setUser(visitingUser.role[0])
+
+      console.log("alla användare i databasen: ", allUsers);
     };
     fetchAllUsers();
-  }, []);
+  }, []); */
 
   return (
     <AuthContext.Provider

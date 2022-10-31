@@ -25,7 +25,6 @@ db.getUsersByEmail = (email) => {
     const query = mysql.format(sql, [email]);
     pool.query(query, (err, result) => {
       if (err) {
-        console.log("inne i error");
         return reject(err);
       }
       return resolve(result[0]);
@@ -36,28 +35,24 @@ db.getUsersByEmail = (email) => {
 db.createUser = (user) => {
   return new Promise((resolve, reject) => {
     const sql =
-      "INSERT INTO Users (userId, username, password, email, role) VALUES (?, ?, ?, ?, ?)";
+      "INSERT INTO Users (userId, username, password, email) VALUES (?, ?, ?, ?)";
 
     const query = mysql.format(sql, [
       null,
       user.username,
       user.hashedPassword,
       user.email,
-      user.role,
     ]);
     pool.query(query, (err, result) => {
       if (err) {
-        console.log("här crashar det", err);
         reject(err);
       }
-      console.log(result);
       resolve(result.insertId);
     });
   });
 };
 
 db.getRolesForUser = (userId) => {
-  console.log("getRolesForUser userid", userId);
   return new Promise((resolve, reject) => {
     const sql =
       "SELECT Roles.roleId, Roles.rolename FROM UsersWithRoles INNER JOIN Roles ON Roles.roleId = UsersWithRoles.roleId WHERE UsersWithRoles.userId = ?";
@@ -67,7 +62,6 @@ db.getRolesForUser = (userId) => {
       if (err) {
         return reject(err);
       }
-      console.log("logg i databas getrolesforuser", result);
       return resolve(result);
     });
   });
@@ -88,7 +82,6 @@ db.getRoleByRolename = (rolename) => {
 };
 
 db.assignRoleToUser = (roleId, userId) => {
-  console.log(roleId);
   return new Promise((resolve, reject) => {
     const sql = "INSERT into UsersWithRoles (userId, roleId) VALUES (?, ?)";
     const query = mysql.format(sql, [userId, roleId]);

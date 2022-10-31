@@ -35,17 +35,14 @@ const Home = () => {
     });
 
     const data = await response.json();
-    console.log(data.role);
-    if (data.role === "worker") {
-      localStorage.setItem("role", data.role);
+    console.log("data", data);
+    if (data.role[0] === "worker") {
       router.push("/worker");
     }
-    if (data.role === "boss") {
-      localStorage.setItem("role", data.role);
+    if (data.role[0] === "boss") {
       router.push("/boss");
     }
-    if (data.role === "admin") {
-      localStorage.setItem("role", data.role);
+    if (data.role[0] === "admin") {
       router.push("/admin");
     }
   }

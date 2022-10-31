@@ -20,7 +20,6 @@ const port = process.env.PORT || 4000;
 app.post("/api/login", async (req, res) => {
   const username = req.body.email;
   let password = req.body.password;
-  console.log(username, password);
 
   if (!username || !password) {
     console.log("fyll i fälten");
@@ -42,15 +41,17 @@ app.post("/api/login", async (req, res) => {
     return;
   }
   const roleFromUserId = await db.getRolesForUser(user.userId);
-  console.log("rolefromuser:", roleFromUserId, user.userId);
-  //hämta userId från email
-  //hämta roleId från userId
+
+  let roles = [];
+  roleFromUserId.forEach((role) => {
+    roles.push(role.rolename);
+  });
 
   const accessToken = jwt.sign(
     {
       username: user.username,
       email: user.email,
-      role: user.role,
+      role: roles,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
@@ -59,11 +60,14 @@ app.post("/api/login", async (req, res) => {
   );
   res
     .status(200)
-    .cookie("token", accessToken, { httpOnly: true, sameSite: "strict" })
+    .cookie("token", accessToken, {
+      httpOnly: true,
+      sameSite: "strict",
+    })
     .json({
       username: user.username,
       email: user.email,
-      role: userId.role,
+      role: roles,
       accessToken: accessToken,
     });
 });
@@ -73,7 +77,6 @@ app.post("/api/register", async (req, res) => {
   const email = req.body.email;
   const rolename = req.body.role;
   let password = req.body.password;
-  console.log(username, password);
 
   try {
     if (!username || !password || !email) {
@@ -82,7 +85,6 @@ app.post("/api/register", async (req, res) => {
     }
 
     const checkUser = await db.getUsersByEmail(email);
-    console.log(checkUser);
     if (checkUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -93,37 +95,17 @@ app.post("/api/register", async (req, res) => {
       username: username,
       hashedPassword: hashedPassword,
       email: email,
-      role: rolename,
     });
     //get role id by rolename
     const role = await db.getRoleByRolename(rolename);
     //assign role to user
-    await db.assignRoleToUser(role.role, userId);
+    await db.assignRoleToUser(role.roleId, userId);
 
-    //signa token returnera cookie
-
-    const accessToken = jwt.sign(
-      {
-        username: username,
-        email: email,
-        role: role.rolename,
-        accessToken: accessToken,
-      },
-      process.env.ACCESS_TOKEN_SECRET,
-      {
-        expiresIn: "15min",
-      }
-    );
-
-    res
-      .status(200)
-      .cookie("token", accessToken, { httpOnly: true, sameSite: "strict" })
-      .json({
-        username: username,
-        email: email,
-        role: role.rolename,
-        accessToken: accessToken,
-      });
+    res.status(200).json({
+      username: username,
+      email: email,
+      role: role.rolename,
+    });
   } catch (err) {
     console.log(err);
     return res.sendStatus(400);
