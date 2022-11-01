@@ -72,6 +72,11 @@ app.post("/api/login", async (req, res) => {
     });
 });
 
+app.get("/api/logout", async (req, res) => {
+  res.clearCookie(accessToken);
+  res.sendStatus(204);
+});
+
 app.get("/api/getcurrentuser", jwtvalidator, async (req, res) => {
   const user = { username: req.username, email: req.email, role: req.role };
 

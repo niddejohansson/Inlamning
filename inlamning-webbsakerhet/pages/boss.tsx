@@ -22,6 +22,7 @@ const Boss = () => {
   };
   function logout() {
     console.log("här ska man loggas ut");
+
   }
 
   return (

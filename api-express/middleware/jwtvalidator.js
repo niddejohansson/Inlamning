@@ -9,6 +9,7 @@ const jwtValidator = (req, res, next) => {
 
   if (!token) {
     console.log("hamnar jag här?");
+
     return res.status(400);
   }
 

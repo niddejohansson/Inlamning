@@ -3,6 +3,7 @@ import styles from "../styles/Worker.module.css";
 const Worker = () => {
   function logout() {
     console.log("här ska man loggas ut");
+
   }
   return (
     <div className={styles.container}>

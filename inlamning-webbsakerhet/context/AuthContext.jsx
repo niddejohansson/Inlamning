@@ -15,6 +15,9 @@ export const AuthContextProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
       });
       const visitingUser = await response.json();
+      if (!user) {
+        return;
+      }
       setUser(visitingUser);
 
       console.log("context", visitingUser);
@@ -29,8 +32,6 @@ export const AuthContextProvider = ({ children }) => {
       if (router.pathname !== "/" + user.role) {
         router.push("/" + user.role);
       }
-    } else {
-      router.push("/");
     }
   }, [user]);
 

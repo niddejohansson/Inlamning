@@ -1,9 +1,10 @@
 import styles from "../styles/Admin.module.css";
-import React, { useState, useEffect } from "react";
-import { NextResponse } from "next/server";
+import React from "react";
 import { useRouter } from "next/router";
 
 const Admin = () => {
+  const router = useRouter();
+
   const registerBoss = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -25,8 +26,13 @@ const Admin = () => {
     console.log(data);
   };
 
-  function logout() {
+  async function logoutUser() {
     console.log("här ska man loggas ut");
+    const res = await fetch("http://localhost:4000/api/logout");
+    console.log(res);
+    if (res.status === 204) {
+      router.push("/");
+    }
   }
 
   return (
@@ -57,7 +63,7 @@ const Admin = () => {
           </button>
         </form>
       </section>
-      <button className={styles.logoutButton} onClick={logout}>
+      <button className={styles.logoutButton} onClick={logoutUser}>
         Logga ut
       </button>
       <div className={styles.listBosses}>List of bosses:</div>
