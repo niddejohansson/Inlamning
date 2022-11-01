@@ -1,21 +1,38 @@
 import { createContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  /* useEffect(() => {
-    const fetchAllUsers = async () => {
-      const response = await fetch("http://localhost:4000/api/getallusers");
-      const visitingUser = response.data.json();
+  useEffect(() => {
+    const fetchCurrentUsers = async () => {
+      const response = await fetch("http://localhost:4000/api/getcurrentuser", {
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
+      const visitingUser = await response.json();
+      setUser(visitingUser);
 
-      //setUser(visitingUser.role[0])
-
-      console.log("alla användare i databasen: ", allUsers);
+      console.log("context", visitingUser);
     };
-    fetchAllUsers();
-  }, []); */
+    fetchCurrentUsers();
+  }, []);
+
+  useEffect(() => {
+    console.log("i authcontext");
+    if (user.username !== undefined) {
+      console.log(router, user.role);
+      if (router.pathname !== "/" + user.role) {
+        router.push("/" + user.role);
+      }
+    } else {
+      router.push("/");
+    }
+  }, [user]);
 
   return (
     <AuthContext.Provider

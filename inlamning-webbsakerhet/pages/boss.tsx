@@ -6,7 +6,8 @@ const Boss = () => {
   const registerWorker = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { username, email, password } = document.forms[0];
+    const { username, email, password, cookie } = document.forms[0];
+    console.log(cookie);
 
     const regInformation = await Axios.post(
       "http://localhost:4000/api/register",
@@ -19,6 +20,9 @@ const Boss = () => {
     );
     console.log(regInformation);
   };
+  function logout() {
+    console.log("här ska man loggas ut");
+  }
 
   return (
     <div className={styles.pageContainer}>
@@ -48,6 +52,9 @@ const Boss = () => {
           </button>
         </form>
       </section>
+      <button className={styles.logoutButton} onClick={logout}>
+        Logga ut
+      </button>
       <div className={styles.listWorkers}>List of your coworkers:</div>
     </div>
   );

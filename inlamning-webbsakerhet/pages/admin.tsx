@@ -1,28 +1,13 @@
 import styles from "../styles/Admin.module.css";
 import React, { useState, useEffect } from "react";
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 import { useRouter } from "next/router";
 
-
-
 const Admin = () => {
-  const router = useRouter();
-
-
   const registerBoss = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const { username, email, password } = document.forms[0];
-
-    /* const regInformation = await Axios.post(
-      "http://localhost:4000/api/register",
-      {
-        username: username.value,
-        email: email.value,
-        password: password.value,
-        role: "boss",
-      }
-    ); */
 
     const response = await fetch("http://localhost:4000/api/register", {
       method: "POST",
@@ -39,6 +24,11 @@ const Admin = () => {
     const data = await response.json();
     console.log(data);
   };
+
+  function logout() {
+    console.log("här ska man loggas ut");
+  }
+
   return (
     <div className={styles.pageContainer}>
       <h1>DU ÄR ADMIN</h1>
@@ -67,6 +57,9 @@ const Admin = () => {
           </button>
         </form>
       </section>
+      <button className={styles.logoutButton} onClick={logout}>
+        Logga ut
+      </button>
       <div className={styles.listBosses}>List of bosses:</div>
     </div>
   );

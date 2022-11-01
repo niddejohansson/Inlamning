@@ -72,7 +72,13 @@ app.post("/api/login", async (req, res) => {
     });
 });
 
-app.post("/api/register", async (req, res) => {
+app.get("/api/getcurrentuser", jwtvalidator, async (req, res) => {
+  const user = { username: req.username, email: req.email, role: req.role };
+
+  res.json(user);
+});
+
+app.post("/api/register", jwtvalidator, async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
   const rolename = req.body.role;
@@ -112,14 +118,14 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-app.get("/api/me", jwtvalidator, async (req, res) => {
-  // const me = await db.getUsersByEmail();
-  res.json({ message: "hejhej" });
-});
-
 app.get("/api/getallusers", async (req, res) => {
   const users = await db.getUsers();
   res.json(users);
+});
+
+app.get("/api/testauth", jwtvalidator, async (req, res) => {
+  console.log("testauth");
+  res.json({ message: "hejhej" });
 });
 
 app.get("/api/getallbosses", async (req, res) => {

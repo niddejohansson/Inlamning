@@ -10,18 +10,6 @@ const Home = () => {
   async function login() {
     console.log("kommer jag in här?");
 
-    /*     await Axios.post("http://localhost:4000/api/login", {
-      email: username.value,
-      password: password.value,
-    })
-      .then(function (response) {
-        console.log(response);
-        
-      })
-      .catch(function (err) {
-        console.log(err);
-      }); */
-
     const response = await fetch("http://localhost:4000/api/login", {
       method: "POST",
       credentials: "include",
@@ -36,6 +24,10 @@ const Home = () => {
 
     const data = await response.json();
     console.log("data", data);
+    if (!data.role) {
+      console.log("användare finns inte i loggen");
+      return;
+    }
     if (data.role[0] === "worker") {
       router.push("/worker");
     }
