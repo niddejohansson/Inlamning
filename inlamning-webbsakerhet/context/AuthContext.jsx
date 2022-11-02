@@ -5,7 +5,8 @@ export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [routeLoggedOutUser, setRouteLoggedOutUser] = useState(false);
+  const [routeLoggedInUser, setRouteLoggedInUser] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -16,6 +17,7 @@ export const AuthContextProvider = ({ children }) => {
       });
       const visitingUser = await response.json();
       if (!user) {
+        console.log("ingen användare inne i fetch current user");
         return;
       }
       setUser(visitingUser);
@@ -26,9 +28,17 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    console.log("i authcontext");
+    console.log("i authcontext", user);
+    if (user.username === undefined) {
+      setRouteLoggedOutUser(true);
+    }
     if (user.username !== undefined) {
-      console.log(router, user.role);
+      setRouteLoggedInUser(true);
+    }
+    if (routeLoggedOutUser) {
+      router.push("http://localhost:3000/");
+    }
+    if (routeLoggedInUser) {
       if (router.pathname !== "/" + user.role) {
         router.push("/" + user.role);
       }
