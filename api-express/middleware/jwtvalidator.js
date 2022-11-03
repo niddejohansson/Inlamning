@@ -1,4 +1,7 @@
 //middleware
+
+////HÄR INNE MÅSTE JAG HANTERA TokenExpiredError: jwt expired
+
 const jwt = require("jsonwebtoken");
 const secret = process.env.ACCESS_TOKEN_SECRET;
 
