@@ -1,29 +1,48 @@
 import styles from "../styles/Boss.module.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Axios from "axios";
+type user = {
+  username: string;
+  email: string;
+};
 
 const Boss = () => {
+  const [allUsers, setAllUsers] = useState<Array<user>>([]);
   const router = useRouter();
+
+  useEffect(() => {
+    showAllWorkers();
+  }, []);
+
   const registerWorker = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { username, email, password, cookie } = document.forms[0];
-    console.log(cookie);
+    const { username, email, password } = document.forms[0];
 
-    const regInformation = await Axios.post(
-      "http://localhost:4000/api/register",
-      {
+    const response = await fetch("http://localhost:4000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         username: username.value,
         email: email.value,
         password: password.value,
         role: "worker",
-      }
-    );
-    console.log(regInformation);
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
   };
+
+  async function showAllWorkers() {
+    const res = await fetch("http://localhost:4000/api/getallworkers");
+    const data = await res.json();
+    console.log("i showallworkers", data);
+    setAllUsers(data);
+  }
+
   async function logoutUser() {
-    console.log("här ska man loggas ut");
     const res = await fetch("http://localhost:4000/api/logout", {
       method: "GET",
       credentials: "include",
@@ -65,7 +84,17 @@ const Boss = () => {
       <button className={styles.logoutButton} onClick={logoutUser}>
         Logga ut
       </button>
-      <div className={styles.listWorkers}>List of your coworkers:</div>
+      <div className={styles.listWorkers}>
+        List of your coworkers:{" "}
+        {allUsers.map((user, index) => {
+          return (
+            <div key={index}>
+              <p>{user.username}</p>
+              <p>{user.email}</p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

@@ -6,7 +6,6 @@ const Worker = () => {
   const router = useRouter();
 
   async function logoutUser() {
-    console.log("här ska man loggas ut");
     const res = await fetch("http://localhost:4000/api/logout", {
       method: "GET",
       credentials: "include",

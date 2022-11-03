@@ -80,14 +80,13 @@ app.get("/api/logout", async (req, res) => {
 app.get("/api/getcurrentuser", jwtvalidator, async (req, res) => {
   try {
     const user = { username: req.username, email: req.email, role: req.role };
-
     res.json(user);
   } catch (err) {
     console.log("error i getcurrentuser");
   }
 });
 
-app.post("/api/register", jwtvalidator, async (req, res) => {
+app.post("/api/register", async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
   const rolename = req.body.role;

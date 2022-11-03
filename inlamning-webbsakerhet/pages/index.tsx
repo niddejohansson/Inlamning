@@ -8,7 +8,7 @@ const Home = () => {
   const [password, setPassword] = useState("");
 
   async function login() {
-    console.log("kommer jag in här?");
+    //console.log("kommer jag in här?");
 
     const response = await fetch("http://localhost:4000/api/login", {
       method: "POST",
@@ -23,7 +23,7 @@ const Home = () => {
     });
 
     const data = await response.json();
-    console.log("data", data);
+    //console.log("data", data);
     if (!data.role) {
       console.log("användare finns inte i loggen");
       return;

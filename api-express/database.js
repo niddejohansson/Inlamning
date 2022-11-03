@@ -123,7 +123,9 @@ db.getUser = () => {
 
 db.getAllBosses = () => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM Users WHERE role = 'boss';";
+    const sql =
+      "SELECT Users.userId, Users.username, Users.email FROM Users INNER JOIN UsersWithRoles ON Users.userId = UsersWithRoles.userId WHERE roleId = 2000";
+
     pool.query(sql, (err, result) => {
       if (err) {
         reject(err);
@@ -136,7 +138,8 @@ db.getAllBosses = () => {
 
 db.getAllWorkers = () => {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM Users WHERE role = 'worker';";
+    const sql =
+      "SELECT Users.userId, Users.username, Users.email FROM Users INNER JOIN UsersWithRoles ON Users.userId = UsersWithRoles.userId WHERE roleId = 3000";
     pool.query(sql, (err, result) => {
       if (err) {
         reject(err);
