@@ -1,8 +1,10 @@
 import styles from "../styles/Boss.module.css";
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import Axios from "axios";
 
 const Boss = () => {
+  const router = useRouter();
   const registerWorker = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -20,9 +22,16 @@ const Boss = () => {
     );
     console.log(regInformation);
   };
-  function logout() {
+  async function logoutUser() {
     console.log("här ska man loggas ut");
-
+    const res = await fetch("http://localhost:4000/api/logout", {
+      method: "GET",
+      credentials: "include",
+    });
+    console.log(res);
+    if (res.status === 204) {
+      router.push("/");
+    }
   }
 
   return (
@@ -53,7 +62,7 @@ const Boss = () => {
           </button>
         </form>
       </section>
-      <button className={styles.logoutButton} onClick={logout}>
+      <button className={styles.logoutButton} onClick={logoutUser}>
         Logga ut
       </button>
       <div className={styles.listWorkers}>List of your coworkers:</div>

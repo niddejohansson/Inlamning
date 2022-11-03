@@ -28,7 +28,10 @@ const Admin = () => {
 
   async function logoutUser() {
     console.log("här ska man loggas ut");
-    const res = await fetch("http://localhost:4000/api/logout");
+    const res = await fetch("http://localhost:4000/api/logout", {
+      method: "GET",
+      credentials: "include",
+    });
     console.log(res);
     if (res.status === 204) {
       router.push("/");

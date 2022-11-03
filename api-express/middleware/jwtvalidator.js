@@ -8,7 +8,8 @@ const jwtValidator = (req, res, next) => {
   const url = req.url;
   try {
     if (!token) {
-      return res.status(400);
+      console.log("Invalid token");
+      return res.status(400).json({ message: "Invalid token" });
     }
 
     if (token) {

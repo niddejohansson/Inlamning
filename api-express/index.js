@@ -73,7 +73,7 @@ app.post("/api/login", async (req, res) => {
 });
 
 app.get("/api/logout", async (req, res) => {
-  res.clearCookie(accessToken);
+  res.clearCookie("token");
   res.sendStatus(204);
 });
 
