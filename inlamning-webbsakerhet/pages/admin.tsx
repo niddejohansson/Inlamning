@@ -1,9 +1,26 @@
 import styles from "../styles/Admin.module.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+
+type boss = {
+  username: string;
+  email: string;
+};
 
 const Admin = () => {
   const router = useRouter();
+  const [allBosses, setAllBosses] = useState<Array<boss>>([]);
+
+  useEffect(() => {
+    showAllBosses();
+  }, []);
+
+  async function showAllBosses() {
+    const res = await fetch("http://localhost:4000/api/getallbosses");
+    const data = await res.json();
+    console.log("i showallworkers", data);
+    setAllBosses(data);
+  }
 
   const registerBoss = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,7 +85,17 @@ const Admin = () => {
       <button className={styles.logoutButton} onClick={logoutUser}>
         Logga ut
       </button>
-      <div className={styles.listBosses}>List of bosses:</div>
+      <div className={styles.listBosses}>
+        List of all bosses:{" "}
+        {allBosses.map((boss, index) => {
+          return (
+            <div key={index}>
+              <p>{boss.username}</p>
+              <p>{boss.email}</p>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
