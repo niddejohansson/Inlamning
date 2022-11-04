@@ -10,6 +10,7 @@ type boss = {
 const Admin = () => {
   const router = useRouter();
   const [allBosses, setAllBosses] = useState<Array<boss>>([]);
+  const [wrongPasswords, setWrongPasswords] = useState(false);
 
   useEffect(() => {
     showAllBosses();
@@ -25,7 +26,11 @@ const Admin = () => {
   const registerBoss = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { username, email, password } = document.forms[0];
+    const { username, email, password, password2 } = document.forms[0];
+
+    if(password !== password2) {
+      setWrongPasswords(true)
+    }
 
     const response = await fetch("http://localhost:4000/api/register", {
       method: "POST",
@@ -36,6 +41,7 @@ const Admin = () => {
         username: username.value,
         email: email.value,
         password: password.value,
+        password2: password2.value,
         role: "boss",
       }),
     });
@@ -70,6 +76,12 @@ const Admin = () => {
             type="password"
             placeholder="Ny användares lösenord"
             name="password"
+          ></input>
+          <input
+            className={styles.adminField}
+            type="password"
+            placeholder="Ny användares lösenord igen"
+            name="password2"
           ></input>
           <input
             className={styles.adminField}

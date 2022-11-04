@@ -90,11 +90,17 @@ app.post("/api/register", async (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
   const rolename = req.body.role;
+  const password2 = req.body.password2;
   let password = req.body.password;
 
   try {
     if (!username || !password || !email) {
       console.log("fyll i fälten");
+      return res.sendStatus(400);
+    }
+
+    if (password !== password2) {
+      console.log("lösenorden är inte samma");
       return res.sendStatus(400);
     }
 
