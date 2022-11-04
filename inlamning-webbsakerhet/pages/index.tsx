@@ -29,12 +29,15 @@ const Home = () => {
       return;
     }
     if (data.role[0] === "worker") {
+      console.log("push worker");
       router.push("/worker");
     }
     if (data.role[0] === "boss") {
+      console.log("push boss");
       router.push("/boss");
     }
     if (data.role[0] === "admin") {
+      console.log("push admin");
       router.push("/admin");
     }
   }

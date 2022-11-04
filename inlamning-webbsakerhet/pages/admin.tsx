@@ -11,9 +11,34 @@ const Admin = () => {
   const router = useRouter();
   const [allBosses, setAllBosses] = useState<Array<boss>>([]);
   const [wrongPasswords, setWrongPasswords] = useState(false);
+  const [toShortPasswords, setToShortPasswords] = useState(false);
 
   useEffect(() => {
-    showAllBosses();
+    const fetchRole = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:4000/api/getcurrentuser",
+          {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        if (data.role !== "admin") {
+          router.push("/");
+        }
+        if (data.role === "admin") {
+          showAllBosses();
+        }
+        console.log("data i fetchrole  :", data);
+      } catch (err) {
+        console.log("error i fetchrole  :", err);
+      }
+    };
+    fetchRole();
   }, []);
 
   async function showAllBosses() {
@@ -25,11 +50,20 @@ const Admin = () => {
 
   const registerBoss = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setWrongPasswords(false);
+    setToShortPasswords(false);
 
     const { username, email, password, password2 } = document.forms[0];
 
-    if(password !== password2) {
-      setWrongPasswords(true)
+    if (password.value !== password2.value) {
+      setWrongPasswords(true);
+      return;
+    }
+
+    if (password.value.length < 6) {
+      console.log("för kort");
+      setToShortPasswords(true);
+      return;
     }
 
     const response = await fetch("http://localhost:4000/api/register", {
@@ -83,6 +117,18 @@ const Admin = () => {
             placeholder="Ny användares lösenord igen"
             name="password2"
           ></input>
+          {wrongPasswords ? (
+            <p style={{ color: "red" }}>Lösenorden är inte samma</p>
+          ) : (
+            ""
+          )}
+          {toShortPasswords ? (
+            <p style={{ color: "red" }}>
+              Lösenorden måste vara minst 6 tecken långt
+            </p>
+          ) : (
+            ""
+          )}
           <input
             className={styles.adminField}
             type="email"
