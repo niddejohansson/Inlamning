@@ -1,6 +1,5 @@
 //middleware
 
-////HÄR INNE MÅSTE JAG HANTERA TokenExpiredError: jwt expired
 const jwt = require("jsonwebtoken");
 const secret = process.env.ACCESS_TOKEN_SECRET;
 
@@ -11,7 +10,6 @@ const jwtValidator = (req, res, next) => {
   const url = req.url;
 
   if (!token) {
-    //console.log("Invalid token");
     return res.status(400).json({ message: "Invalid token" });
   }
 

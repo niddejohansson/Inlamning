@@ -16,7 +16,6 @@ export const AuthContextProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
       });
 
-      //här måste jag kolla om res är status 400
       if (response.status === 400) {
         console.log("fel i jwttoken");
         setRouteLoggedOutUser(true);
@@ -24,24 +23,19 @@ export const AuthContextProvider = ({ children }) => {
           router.push("http://localhost:3000/");
         }
       }
-      //console.log("efter fetch");
 
       const visitingUser = await response.json();
-      //console.log(visitingUser);
       if (!visitingUser.username) {
         console.log("ingen användare inne i fetch current user");
         router.push("http://localhost:3000/");
         return;
       }
       setUser(visitingUser);
-
-      //console.log("context", visitingUser);
     };
     fetchCurrentUsers();
   }, []);
 
   useEffect(() => {
-    //console.log("i authcontext", user);
     if (user.username === undefined) {
       setRouteLoggedOutUser(true);
       if (routeLoggedOutUser) {

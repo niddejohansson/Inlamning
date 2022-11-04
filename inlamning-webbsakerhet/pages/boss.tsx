@@ -27,6 +27,7 @@ const Boss = () => {
           }
         );
         const data = await response.json();
+        console.log("roll log i boss :", data.role);
         if (data.role !== "boss") {
           router.push("/");
         }
@@ -37,6 +38,14 @@ const Boss = () => {
         console.log("data i fetchrole  :", data);
       } catch (err) {
         console.log("error i fetchrole  :", err);
+        const res = await fetch("http://localhost:4000/api/logout", {
+          method: "GET",
+          credentials: "include",
+        });
+        console.log(res);
+        if (res.status === 204) {
+          router.push("/");
+        }
       }
     };
     fetchRole();
@@ -95,7 +104,7 @@ const Boss = () => {
     }
   }
 
-  return : loading ? (
+  return loading ? (
     <div className={styles.pageContainer}>
       <h1>DU ÄR BOSS</h1>
       <section className={styles.bossContainer}>
@@ -156,6 +165,8 @@ const Boss = () => {
         })}
       </div>
     </div>
+  ) : (
+    ""
   );
 };
 

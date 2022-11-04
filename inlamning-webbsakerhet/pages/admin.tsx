@@ -12,6 +12,7 @@ const Admin = () => {
   const [allBosses, setAllBosses] = useState<Array<boss>>([]);
   const [wrongPasswords, setWrongPasswords] = useState(false);
   const [toShortPasswords, setToShortPasswords] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchRole = async () => {
@@ -32,10 +33,19 @@ const Admin = () => {
         }
         if (data.role === "admin") {
           showAllBosses();
+          setLoading(true);
         }
         console.log("data i fetchrole  :", data);
       } catch (err) {
         console.log("error i fetchrole  :", err);
+        const res = await fetch("http://localhost:4000/api/logout", {
+          method: "GET",
+          credentials: "include",
+        });
+        console.log(res);
+        if (res.status === 204) {
+          router.push("/");
+        }
       }
     };
     fetchRole();
@@ -94,7 +104,7 @@ const Admin = () => {
     }
   }
 
-  return (
+  return loading ? (
     <div className={styles.pageContainer}>
       <h1>DU ÄR ADMIN</h1>
       <section className={styles.adminContainer}>
@@ -155,6 +165,8 @@ const Admin = () => {
         })}
       </div>
     </div>
+  ) : (
+    ""
   );
 };
 
