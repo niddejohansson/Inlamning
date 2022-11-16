@@ -116,9 +116,8 @@ app.post("/api/register", async (req, res) => {
       hashedPassword: hashedPassword,
       email: email,
     });
-    //get role id by rolename
     const role = await db.getRoleByRolename(rolename);
-    //assign role to user
+
     await db.assignRoleToUser(role.roleId, userId);
 
     res.status(200).json({
@@ -135,11 +134,6 @@ app.post("/api/register", async (req, res) => {
 app.get("/api/getallusers", async (req, res) => {
   const users = await db.getUsers();
   res.json(users);
-});
-
-app.get("/api/testauth", jwtvalidator, async (req, res) => {
-  console.log("testauth");
-  res.json({ message: "hejhej" });
 });
 
 app.get("/api/getallbosses", async (req, res) => {

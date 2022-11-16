@@ -53,7 +53,7 @@ const Worker = () => {
     }
   }
   return loading ? (
-    <div className={styles.container}>
+    <div className={styles.workerContainer}>
       <h1 className={styles.h1}>DU ÄR LÖNESLAV</h1>
 
       <button className={styles.logoutButton} onClick={logoutUser}>

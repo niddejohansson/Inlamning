@@ -108,19 +108,6 @@ db.getUsers = () => {
   });
 };
 
-db.getUser = () => {
-  return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM Users WHERE role = 'boss';";
-    pool.query(sql, (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-};
-
 db.getAllBosses = () => {
   return new Promise((resolve, reject) => {
     const sql =
