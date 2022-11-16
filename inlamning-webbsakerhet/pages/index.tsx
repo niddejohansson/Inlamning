@@ -8,6 +8,7 @@ const Home = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [wrongInput, setWrongInput] = useState(false);
 
   useEffect(() => {
     const fetchRole = async () => {
@@ -23,6 +24,7 @@ const Home = () => {
           }
         );
         const data = await response.json();
+
         if (!data.role) {
           return;
         }
@@ -65,6 +67,7 @@ const Home = () => {
     const data = await response.json();
     setUser(data);
     if (!data.role) {
+      setWrongInput(true);
       return;
     }
     if (data.role[0] === "worker") {
@@ -97,6 +100,11 @@ const Home = () => {
               setPassword(e.target.value);
             }}
           ></input>
+          {wrongInput ? (
+            <p style={{ color: "red" }}>Fel lösenord eller användarnamn</p>
+          ) : (
+            ""
+          )}
           <button className={styles.loginButton} onClick={login}>
             Logga in
           </button>
