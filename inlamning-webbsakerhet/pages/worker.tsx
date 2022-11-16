@@ -1,46 +1,11 @@
 import styles from "../styles/Worker.module.css";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { useAuthContext } from "../context/AuthContext";
 
 const Worker = () => {
+  const { user, setUser } = useAuthContext();
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchRole = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:4000/api/getcurrentuser",
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const data = await response.json();
-        if (data.role !== "worker") {
-          router.push("/");
-        }
-        if (data.role === "worker") {
-          setLoading(true);
-        }
-        console.log("data i fetchrole  :", data);
-      } catch (err) {
-        console.log("error i fetchrole  :", err);
-        const res = await fetch("http://localhost:4000/api/logout", {
-          method: "GET",
-          credentials: "include",
-        });
-        console.log(res);
-        if (res.status === 204) {
-          router.push("/");
-        }
-      }
-    };
-    fetchRole();
-  }, []);
 
   async function logoutUser() {
     const res = await fetch("http://localhost:4000/api/logout", {
@@ -49,10 +14,11 @@ const Worker = () => {
     });
     console.log(res);
     if (res.status === 204) {
+      setUser(null);
       router.push("/");
     }
   }
-  return loading ? (
+  return user?.role === "worker" || user?.role[0] === "worker" ? (
     <div className={styles.workerContainer}>
       <h1 className={styles.h1}>DU ÄR LÖNESLAV</h1>
 

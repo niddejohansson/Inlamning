@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const secret = process.env.ACCESS_TOKEN_SECRET;
 
 const jwtValidator = (req, res, next) => {
-  console.log("inne i jwtvalid.js");
   const { cookies } = req;
   const token = cookies.token;
 
@@ -15,9 +14,6 @@ const jwtValidator = (req, res, next) => {
     req.username = data.username;
     req.role = data.role[0];
     req.email = data.email;
-
-    console.log("role  :", req.role);
-    console.log("url  :", req.url);
 
     try {
       jwt.verify(token, secret);

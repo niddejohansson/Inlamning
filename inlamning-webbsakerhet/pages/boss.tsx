@@ -1,55 +1,24 @@
 import styles from "../styles/Boss.module.css";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { useAuthContext } from "../context/AuthContext";
 type user = {
   username: string;
   email: string;
 };
 
 const Boss = () => {
+  const { user, setUser } = useAuthContext();
   const [allUsers, setAllUsers] = useState<Array<user>>([]);
   const [wrongPasswords, setWrongPasswords] = useState(false);
   const [toShortPasswords, setToShortPasswords] = useState(false);
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchRole = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:4000/api/getcurrentuser",
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const data = await response.json();
-        console.log("roll log i boss :", data.role);
-        if (data.role !== "boss") {
-          router.push("/");
-        }
-        if (data.role === "boss") {
-          showAllWorkers();
-          setLoading(true);
-        }
-        console.log("data i fetchrole  :", data);
-      } catch (err) {
-        console.log("error i fetchrole  :", err);
-        const res = await fetch("http://localhost:4000/api/logout", {
-          method: "GET",
-          credentials: "include",
-        });
-        console.log(res);
-        if (res.status === 204) {
-          router.push("/");
-        }
-      }
-    };
-    fetchRole();
-  }, []);
+    if (user?.role === "boss" || user?.role[0] === "boss") {
+      showAllWorkers();
+    }
+  }, [user]);
 
   const registerWorker = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -64,7 +33,6 @@ const Boss = () => {
     }
 
     if (password.value.length < 6) {
-      console.log("för kort");
       setToShortPasswords(true);
       return;
     }
@@ -83,13 +51,14 @@ const Boss = () => {
       }),
     });
     const data = await response.json();
-    console.log(data);
+    location.reload();
   };
 
   async function showAllWorkers() {
-    const res = await fetch("http://localhost:4000/api/getallworkers");
+    const res = await fetch("http://localhost:4000/api/getallworkers", {
+      credentials: "include",
+    });
     const data = await res.json();
-    console.log("i showallworkers", data);
     setAllUsers(data);
   }
 
@@ -98,13 +67,13 @@ const Boss = () => {
       method: "GET",
       credentials: "include",
     });
-    console.log(res);
     if (res.status === 204) {
+      setUser(null);
       router.push("/");
     }
   }
 
-  return loading ? (
+  return user?.role === "boss" || user?.role[0] === "boss" ? (
     <div className={styles.pageContainer}>
       <h1>DU ÄR BOSS</h1>
       <section className={styles.bossContainer}>
@@ -150,9 +119,6 @@ const Boss = () => {
           </button>
         </form>
       </section>
-      <button className={styles.logoutButton} onClick={logoutUser}>
-        Logga ut
-      </button>
       <div className={styles.listWorkers}>
         List of your coworkers:{" "}
         {allUsers.map((user, index) => {
@@ -164,6 +130,9 @@ const Boss = () => {
           );
         })}
       </div>
+      <button className={styles.logoutButton} onClick={logoutUser}>
+        Logga ut
+      </button>
     </div>
   ) : (
     ""

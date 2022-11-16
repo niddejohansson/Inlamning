@@ -1,8 +1,10 @@
 import styles from "../styles/Index.module.css";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { useAuthContext } from "../context/AuthContext";
 
 const Home = () => {
+  const { user, setUser } = useAuthContext();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,7 +24,6 @@ const Home = () => {
         );
         const data = await response.json();
         if (!data.role) {
-          console.log("användare finns inte i loggen");
           return;
         }
         if (data.role === "worker") {
@@ -34,14 +35,12 @@ const Home = () => {
         if (data.role === "admin") {
           router.push("/admin");
         }
-        console.log("data i fetchrole  :", data);
       } catch (err) {
-        console.log("error i fetchrole  :", err);
+        console.log(err);
         const res = await fetch("http://localhost:4000/api/logout", {
           method: "GET",
           credentials: "include",
         });
-        console.log(res);
         if (res.status === 204) {
           router.push("/");
         }
@@ -51,8 +50,6 @@ const Home = () => {
   }, []);
 
   async function login() {
-    //console.log("kommer jag in här?");
-
     const response = await fetch("http://localhost:4000/api/login", {
       method: "POST",
       credentials: "include",
@@ -66,21 +63,17 @@ const Home = () => {
     });
 
     const data = await response.json();
-    //console.log("data", data);
+    setUser(data);
     if (!data.role) {
-      console.log("användare finns inte i loggen");
       return;
     }
     if (data.role[0] === "worker") {
-      console.log("push worker");
       router.push("/worker");
     }
     if (data.role[0] === "boss") {
-      console.log("push boss");
       router.push("/boss");
     }
     if (data.role[0] === "admin") {
-      console.log("push admin");
       router.push("/admin");
     }
   }

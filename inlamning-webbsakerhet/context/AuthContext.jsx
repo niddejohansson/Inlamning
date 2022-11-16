@@ -1,10 +1,10 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router";
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null);
   const [routeLoggedOutUser, setRouteLoggedOutUser] = useState(false);
   const [routeLoggedInUser, setRouteLoggedInUser] = useState(false);
   const router = useRouter();
@@ -17,7 +17,6 @@ export const AuthContextProvider = ({ children }) => {
       });
 
       if (response.status === 400) {
-        console.log("fel i jwttoken");
         setRouteLoggedOutUser(true);
         if (routeLoggedOutUser) {
           router.push("http://localhost:3000/");
@@ -26,7 +25,6 @@ export const AuthContextProvider = ({ children }) => {
 
       const visitingUser = await response.json();
       if (!visitingUser.username) {
-        console.log("ingen användare inne i fetch current user");
         router.push("http://localhost:3000/");
         return;
       }
@@ -36,13 +34,13 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (user.username === undefined) {
+    if (user?.username === undefined) {
       setRouteLoggedOutUser(true);
       if (routeLoggedOutUser) {
         router.push("http://localhost:3000/");
       }
     }
-    if (user.username !== undefined) {
+    if (user?.username !== undefined) {
       setRouteLoggedInUser(true);
       if (routeLoggedInUser) {
         if (router.pathname !== "/" + user.role) {
@@ -51,8 +49,6 @@ export const AuthContextProvider = ({ children }) => {
       }
     }
   }, [user]);
-
-  useEffect(() => {});
 
   return (
     <AuthContext.Provider
@@ -65,3 +61,5 @@ export const AuthContextProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export const useAuthContext = () => useContext(AuthContext);

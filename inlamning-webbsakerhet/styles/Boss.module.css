@@ -7,7 +7,6 @@
 
 .bossContainer {
   background-color: rgb(209, 207, 207);
-  height: 200px;
   border-radius: 10px;
   width: 30%;
   display: flex;
@@ -36,7 +35,6 @@
 
 .listWorkers {
   background-color: rgb(209, 207, 207);
-  height: 200px;
   width: 30%;
   margin-top: 25px;
   text-align: center;

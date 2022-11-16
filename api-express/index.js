@@ -117,7 +117,6 @@ app.post("/api/register", async (req, res) => {
       email: email,
     });
     const role = await db.getRoleByRolename(rolename);
-
     await db.assignRoleToUser(role.roleId, userId);
 
     res.status(200).json({

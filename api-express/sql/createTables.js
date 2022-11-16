@@ -14,12 +14,15 @@ const db = mysql.createConnection({
   password: DB_PASSWORD,
   database: DB_DATABASE,
   port: DB_PORT,
+  multipleStatements: true,
 });
 
 // CREATE TABLES
 
 db.connect(async (err, connection) => {
   console.log("RUNNING CREATE TABLE SCRIPT");
+  let dropTables = `DROP TABLE IF EXISTS UsersWithRoles; DROP TABLES IF EXISTS Roles; DROP TABLE IF EXISTS Users`;
+
   let createUsersTable = `CREATE TABLE Users (
     userId int NOT NULL AUTO_INCREMENT, 
     username varchar(45) NOT NULL, 
@@ -43,22 +46,30 @@ db.connect(async (err, connection) => {
     ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
     `;
 
-  db.query(createUsersTable, async (err) => {
+  db.query(dropTables, async (err) => {
     if (err) {
+      console.log(err);
       process.exit(1);
     }
-    console.log("TABLE CREATED!");
-    db.query(createRolesTable, async (err) => {
+    console.log("TABLES CREATED");
+
+    db.query(createUsersTable, async (err) => {
       if (err) {
         process.exit(1);
       }
       console.log("TABLE CREATED!");
-      db.query(createUsersWithRoleTable, async (err) => {
+      db.query(createRolesTable, async (err) => {
         if (err) {
           process.exit(1);
         }
         console.log("TABLE CREATED!");
-        process.exit(0);
+        db.query(createUsersWithRoleTable, async (err) => {
+          if (err) {
+            process.exit(1);
+          }
+          console.log("TABLE CREATED!");
+          process.exit(0);
+        });
       });
     });
   });

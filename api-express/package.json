@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
     "createDb": "node ./sql/createDb.js",
-    "createTables": "node ./sql/createTables.js"
+    "createTables": "node ./sql/createTables.js",
+    "myInitScript": "node ./sql/myInitScript.js",
+    "createAll": "npm run createDb && npm run createTables && npm run myInitScript"
   },
   "keywords": [],
   "author": "",

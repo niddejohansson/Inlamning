@@ -1,6 +1,7 @@
 import styles from "../styles/Admin.module.css";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { useAuthContext } from "../context/AuthContext";
 
 type boss = {
   username: string;
@@ -9,52 +10,22 @@ type boss = {
 
 const Admin = () => {
   const router = useRouter();
+  const { user, setUser } = useAuthContext();
   const [allBosses, setAllBosses] = useState<Array<boss>>([]);
   const [wrongPasswords, setWrongPasswords] = useState(false);
   const [toShortPasswords, setToShortPasswords] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchRole = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:4000/api/getcurrentuser",
-          {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const data = await response.json();
-        if (data.role !== "admin") {
-          router.push("/");
-        }
-        if (data.role === "admin") {
-          showAllBosses();
-          setLoading(true);
-        }
-        console.log("data i fetchrole  :", data);
-      } catch (err) {
-        console.log("error i fetchrole  :", err);
-        const res = await fetch("http://localhost:4000/api/logout", {
-          method: "GET",
-          credentials: "include",
-        });
-        console.log(res);
-        if (res.status === 204) {
-          router.push("/");
-        }
-      }
-    };
-    fetchRole();
-  }, []);
+    if (user?.role === "admin" || user?.role[0] === "admin") {
+      showAllBosses();
+    }
+  }, [user]);
 
   async function showAllBosses() {
-    const res = await fetch("http://localhost:4000/api/getallbosses");
+    const res = await fetch("http://localhost:4000/api/getallbosses", {
+      credentials: "include",
+    });
     const data = await res.json();
-    console.log("i showallworkers", data);
     setAllBosses(data);
   }
 
@@ -71,7 +42,6 @@ const Admin = () => {
     }
 
     if (password.value.length < 6) {
-      console.log("för kort");
       setToShortPasswords(true);
       return;
     }
@@ -90,7 +60,7 @@ const Admin = () => {
       }),
     });
     const data = await response.json();
-    console.log(data);
+    location.reload();
   };
 
   async function logoutUser() {
@@ -98,13 +68,13 @@ const Admin = () => {
       method: "GET",
       credentials: "include",
     });
-    console.log(res);
     if (res.status === 204) {
+      setUser(null);
       router.push("/");
     }
   }
 
-  return loading ? (
+  return user?.role === "admin" || user?.role[0] === "admin" ? (
     <div className={styles.pageContainer}>
       <h1>DU ÄR ADMIN</h1>
       <section className={styles.adminContainer}>
@@ -150,9 +120,6 @@ const Admin = () => {
           </button>
         </form>
       </section>
-      <button className={styles.logoutButton} onClick={logoutUser}>
-        Logga ut
-      </button>
       <div className={styles.listBosses}>
         List of all bosses:{" "}
         {allBosses.map((boss, index) => {
@@ -164,6 +131,9 @@ const Admin = () => {
           );
         })}
       </div>
+      <button className={styles.logoutButton} onClick={logoutUser}>
+        Logga ut
+      </button>
     </div>
   ) : (
     ""
