@@ -9,6 +9,10 @@ const jwtValidator = (req, res, next) => {
     return res.status(400).json({ message: "Invalid token" });
   }
 
+  if ("JsonWebTokenError: invalid signature") {
+    return res.status(400).json({ message: "Invalid token" });
+  }
+
   if (token) {
     const data = jwt.verify(token, secret);
     req.username = data.username;

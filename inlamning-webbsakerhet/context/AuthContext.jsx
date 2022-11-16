@@ -16,6 +16,13 @@ export const AuthContextProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
       });
 
+      if (response.status === 500) {
+        setRouteLoggedOutUser(true);
+        if (routeLoggedOutUser) {
+          router.push("http://localhost:3000/");
+        }
+      }
+
       if (response.status === 400) {
         setRouteLoggedOutUser(true);
         if (routeLoggedOutUser) {
