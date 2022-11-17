@@ -16,7 +16,7 @@ const Admin = () => {
   const [toShortPasswords, setToShortPasswords] = useState(false);
 
   useEffect(() => {
-    if (user?.role === "admin" || user?.role[0] === "admin") {
+    if (user?.role === "admin") {
       showAllBosses();
     }
   }, [user]);
@@ -74,9 +74,9 @@ const Admin = () => {
     }
   }
 
-  return user?.role === "admin" || user?.role[0] === "admin" ? (
+  return user?.role === "admin" ? (
     <div className={styles.pageContainer}>
-      <h1>DU ÄR ADMIN</h1>
+      <h1>DU ÄR ADMIN {user.username}</h1>
       <section className={styles.adminContainer}>
         <form className={styles.adminForm} onSubmit={registerBoss}>
           <input

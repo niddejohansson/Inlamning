@@ -6,7 +6,12 @@ const jwt = require("jsonwebtoken");
 const cookieparser = require("cookie-parser");
 require("dotenv").config();
 
-const jwtvalidator = require("./middleware/jwtvalidator");
+const {
+  jwtValidator,
+  adminValidator,
+  bossValidator,
+  workerValidator,
+} = require("./middleware/jwtvalidator");
 const db = require("./database");
 const app = express();
 
@@ -41,11 +46,9 @@ app.post("/api/login", async (req, res) => {
     return;
   }
   const roleFromUserId = await db.getRolesForUser(user.userId);
+  console.log(roleFromUserId);
 
-  let roles = [];
-  roleFromUserId.forEach((role) => {
-    roles.push(role.rolename);
-  });
+  let roles = roleFromUserId[0].rolename;
 
   const accessToken = jwt.sign(
     {
@@ -73,16 +76,17 @@ app.post("/api/login", async (req, res) => {
 });
 
 app.get("/api/logout", async (req, res) => {
-  res.clearCookie("token");
-  res.sendStatus(204);
+  res.clearCookie("token").sendStatus(204);
+  //kan behöva ändra till status istället för sendstatus
 });
 
-app.get("/api/getcurrentuser", jwtvalidator, async (req, res) => {
+app.get("/api/getcurrentuser", jwtValidator, async (req, res) => {
   try {
     const user = { username: req.username, email: req.email, role: req.role };
-    res.json(user);
+    res.status(200).json(user);
+    console.log("user i getcurrentuser", user);
   } catch (err) {
-    console.log("error i getcurrentuser");
+    console.log("api  ", err);
   }
 });
 
@@ -135,12 +139,12 @@ app.get("/api/getallusers", async (req, res) => {
   res.json(users);
 });
 
-app.get("/api/getallbosses", async (req, res) => {
+app.get("/api/getallbosses", adminValidator, async (req, res) => {
   const bosses = await db.getAllBosses();
   res.json(bosses);
 });
 
-app.get("/api/getallworkers", async (req, res) => {
+app.get("/api/getallworkers", bossValidator, async (req, res) => {
   const workers = await db.getAllWorkers();
   res.json(workers);
 });

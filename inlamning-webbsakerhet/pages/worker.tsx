@@ -20,7 +20,7 @@ const Worker = () => {
   }
   return user?.role === "worker" || user?.role[0] === "worker" ? (
     <div className={styles.workerContainer}>
-      <h1 className={styles.h1}>DU ÄR LÖNESLAV</h1>
+      <h1 className={styles.h1}>DU ÄR LÖNESLAV {user.username}</h1>
 
       <button className={styles.logoutButton} onClick={logoutUser}>
         Logga ut

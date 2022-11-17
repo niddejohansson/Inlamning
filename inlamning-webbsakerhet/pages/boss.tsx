@@ -15,7 +15,7 @@ const Boss = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (user?.role === "boss" || user?.role[0] === "boss") {
+    if (user?.role === "boss") {
       showAllWorkers();
     }
   }, [user]);
@@ -73,9 +73,9 @@ const Boss = () => {
     }
   }
 
-  return user?.role === "boss" || user?.role[0] === "boss" ? (
+  return user?.role === "boss" ? (
     <div className={styles.pageContainer}>
-      <h1>DU ÄR BOSS</h1>
+      <h1>DU ÄR BOSS {user.username}</h1>
       <section className={styles.bossContainer}>
         <form className={styles.bossForm} onSubmit={registerWorker}>
           <input

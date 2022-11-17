@@ -15,24 +15,18 @@ export const AuthContextProvider = ({ children }) => {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
       });
-
-      if (response.status === 500) {
-        setRouteLoggedOutUser(true);
-        if (routeLoggedOutUser) {
-          router.push("http://localhost:3000/");
-        }
+      if (response.status === 401) {
+        await fetch("http://localhost:4000/api/logout", {
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        });
+        setUser(null);
+        router.replace("http://localhost:3000/");
+        return;
       }
-
-      if (response.status === 400) {
-        setRouteLoggedOutUser(true);
-        if (routeLoggedOutUser) {
-          router.push("http://localhost:3000/");
-        }
-      }
-
       const visitingUser = await response.json();
       if (!visitingUser.username) {
-        router.push("http://localhost:3000/");
+        router.replace("http://localhost:3000/");
         return;
       }
       setUser(visitingUser);

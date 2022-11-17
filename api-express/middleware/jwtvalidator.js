@@ -6,28 +6,96 @@ const jwtValidator = (req, res, next) => {
   const token = cookies.token;
 
   if (!token) {
-    return res.status(400).json({ message: "Invalid token" });
+    return res.status(401).json({ message: "Invalid token" });
   }
 
-  if ("JsonWebTokenError: invalid signature") {
-    return res.status(400).json({ message: "Invalid token" });
-  }
-
-  if (token) {
+  try {
     const data = jwt.verify(token, secret);
     req.username = data.username;
-    req.role = data.role[0];
+    req.role = data.role;
     req.email = data.email;
-
-    try {
-      jwt.verify(token, secret);
-      next();
-    } catch (err) {
-      return res.sendStatus(400);
-    }
-
     next();
+  } catch (err) {
+    console.log("err i jwtvalid", err);
+    return res.status(401).json({ message: "no" });
   }
 };
 
-module.exports = jwtValidator;
+const adminValidator = (req, res, next) => {
+  const { cookies } = req;
+  const token = cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+
+  try {
+    const data = jwt.verify(token, secret);
+    if (data.role === "admin") {
+      req.username = data.username;
+      req.role = data.role;
+      req.email = data.email;
+      return next();
+    } else {
+      return res.status(403).json({ message: "access forbidden" });
+    }
+  } catch (err) {
+    console.log("err i jwtvalid", err);
+    return res.status(401).json({ message: "not vaild jwt" });
+  }
+};
+
+const bossValidator = (req, res, next) => {
+  const { cookies } = req;
+  const token = cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+
+  try {
+    const data = jwt.verify(token, secret);
+    if (data.role === "boss") {
+      req.username = data.username;
+      req.role = data.role;
+      req.email = data.email;
+      return next();
+    } else {
+      return res.status(403).json({ message: "access forbidden" });
+    }
+  } catch (err) {
+    console.log("err i jwtvalid", err);
+    return res.status(401).json({ message: "not vaild jwt" });
+  }
+};
+
+const workerValidator = (req, res, next) => {
+  const { cookies } = req;
+  const token = cookies.token;
+
+  if (!token) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+
+  try {
+    const data = jwt.verify(token, secret);
+    if (data.role === "worker") {
+      req.username = data.username;
+      req.role = data.role;
+      req.email = data.email;
+      return next();
+    } else {
+      return res.status(403).json({ message: "access forbidden" });
+    }
+  } catch (err) {
+    console.log("err i jwtvalid", err);
+    return res.status(401).json({ message: "not vaild jwt" });
+  }
+};
+
+module.exports = {
+  jwtValidator,
+  adminValidator,
+  bossValidator,
+  workerValidator,
+};

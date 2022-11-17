@@ -28,15 +28,7 @@ const Home = () => {
         if (!data.role) {
           return;
         }
-        if (data.role === "worker") {
-          router.push("/worker");
-        }
-        if (data.role === "boss") {
-          router.push("/boss");
-        }
-        if (data.role === "admin") {
-          router.push("/admin");
-        }
+        router.push("/" + data.role);
       } catch (err) {
         console.log(err);
         const res = await fetch("http://localhost:4000/api/logout", {
@@ -70,15 +62,7 @@ const Home = () => {
       setWrongInput(true);
       return;
     }
-    if (data.role[0] === "worker") {
-      router.push("/worker");
-    }
-    if (data.role[0] === "boss") {
-      router.push("/boss");
-    }
-    if (data.role[0] === "admin") {
-      router.push("/admin");
-    }
+    router.push("/" + data.role);
   }
   return (
     <div className={styles.pageContainer}>
