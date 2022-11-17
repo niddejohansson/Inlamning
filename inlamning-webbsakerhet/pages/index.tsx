@@ -30,7 +30,6 @@ const Home = () => {
         }
         router.push("/" + data.role);
       } catch (err) {
-        console.log(err);
         const res = await fetch("http://localhost:4000/api/logout", {
           method: "GET",
           credentials: "include",
